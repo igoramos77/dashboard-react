@@ -6,5 +6,6 @@ export const Container = styled.div`
   > article {
     display: flex;
     justify-content: space-between;
+    margin-bottom: 2rem;
   }
 `;
