@@ -4,6 +4,7 @@ import ContentHeader from '../../components/ContentHeader';
 import SelectInput from '../../components/SelectInput';
 import ContentStatistics from '../../components/ContentStatistics';
 import MessageBox from '../../components/MessageBox';
+import PieChart from '../../components/PieChart';
 
 import gains from '../../repositories/gains';
 import expenses from '../../repositories/expenses';
@@ -13,7 +14,7 @@ import happyImg from '../../assets/happy.svg';
 import sadImg from '../../assets/sad.svg';
 import grinningImg from '../../assets/grinning.svg';
 
-import { Container } from './styles';
+import { Container, ContentStatisticsGraphs } from './styles';
 
 const Dashboard: React.FC = () => {
   const [mouthSelected, setMouthSelected] = useState<number>(new Date().getMonth() + 1);
@@ -122,6 +123,30 @@ const Dashboard: React.FC = () => {
 
   },[totalBalance]);
 
+  const relationsExpensesVersusGains = useMemo(() => {
+    const total = totalGains + totalExpenses;
+    const percentGains = (totalGains / total) * 100;
+    const percentExpenses = (totalExpenses / total) * 100;
+
+    const data = [
+      {
+        name: "Entradas",
+        value: totalGains,
+        percent: Number(percentGains.toFixed(1)),
+        background: '#e44c4e'
+      },
+      {
+        name: "Saídas",
+        value: totalExpenses,
+        percent: Number(percentExpenses.toFixed(1)),
+        background: '#f7931b'
+      }
+    ];
+
+    return data;
+
+  },[totalGains, totalExpenses]);
+
 
   const handleMothSelected = (mouth: string) => {
     try {
@@ -144,7 +169,7 @@ const Dashboard: React.FC = () => {
   }
 
   return(
-    <Container>
+    <Container>''
       <ContentHeader title="Dashboard" lineColor="#f7931b">
         <SelectInput options={months} onChange={(e) => handleMothSelected(e.target.value)} defaultValue={mouthSelected} />
         <SelectInput options={years} onChange={(e) => handleYearSelected(e.target.value)} defaultValue={yearSelected} />
@@ -154,9 +179,10 @@ const Dashboard: React.FC = () => {
         <ContentStatistics labelText="entradas" background="#f29318" value={totalGains} subText="Atualizado com base nas entradas e saídas" icon="arrowUp" />
         <ContentStatistics labelText="saídas" background="#df514e" value={totalExpenses} subText="Atualizado com base nas entradas e saídas" icon="arrowDown" />
       </article>
-      <div>
-        <MessageBox title={message.title} description={message.description} footerText={message.footerText} icon={message.icon} />
-      </div>
+        <ContentStatisticsGraphs>
+          <MessageBox title={message.title} description={message.description} footerText={message.footerText} icon={message.icon} />
+          <PieChart data={relationsExpensesVersusGains}></PieChart>
+        </ContentStatisticsGraphs>
     </Container>
   );
 }
