@@ -79,7 +79,7 @@ const List: React.FC<IRouteParams> = ({ match }) => {
         }
       });
 
-  },[data]);
+  },[pageData]);
 
   const months = useMemo(() => {
     return listMonths.map((month, index) => {
@@ -142,7 +142,7 @@ const List: React.FC<IRouteParams> = ({ match }) => {
       }
     })
     setData(formatedDate);
-  },[mouthSelected, yearSelected, selectedFrequency]);
+  },[mouthSelected, yearSelected, selectedFrequency, pageData]);
 
   return(
     <Container>

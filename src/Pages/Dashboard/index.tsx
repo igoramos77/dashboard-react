@@ -4,7 +4,8 @@ import ContentHeader from '../../components/ContentHeader';
 import SelectInput from '../../components/SelectInput';
 import ContentStatistics from '../../components/ContentStatistics';
 import MessageBox from '../../components/MessageBox';
-import PieChart from '../../components/PieChart';
+import PieChartBox from '../../components/PieChartBox';
+import HistoryBox from '../../components/HistoryBox';
 
 import gains from '../../repositories/gains';
 import expenses from '../../repositories/expenses';
@@ -25,7 +26,7 @@ const Dashboard: React.FC = () => {
     let uniqueYears: number[] = [];
 
 
-    [... expenses, ... gains].forEach(item => {
+    [...expenses, ...gains].forEach(item => {
       const date = new Date(item.date);
       const year = date.getFullYear();
 
@@ -133,19 +134,68 @@ const Dashboard: React.FC = () => {
         name: "Entradas",
         value: totalGains,
         percent: Number(percentGains.toFixed(1)),
-        background: '#e44c4e'
+        background: "#e44c4e",
       },
       {
         name: "Saídas",
         value: totalExpenses,
         percent: Number(percentExpenses.toFixed(1)),
-        background: '#f7931b'
+        background: "#f7931b",
       }
     ];
 
     return data;
 
   },[totalGains, totalExpenses]);
+
+  const histotyData = useMemo(() => {
+    return listMonths.map((_, month) => {
+
+      let amoutEntry = 0;
+
+      gains.forEach(element => {
+        const date = new Date(element.date);
+        const gainMonth = date.getMonth();
+        const gainYear = date.getFullYear();
+
+        if (gainMonth === month && gainYear === yearSelected) {
+          try {
+            amoutEntry += Number(element.amount);
+          } catch (error) {
+            throw new Error('amoutEntry is invalid. Amout entre must be valid number.');
+          }
+        }
+      });
+
+      let amoutOutput = 0;
+
+      expenses.forEach(element => {
+        const date = new Date(element.date);
+        const expenseMonth = date.getMonth();
+        const expenseYear = date.getFullYear();
+
+        if (expenseMonth === month && expenseYear === yearSelected) {
+          try {
+            amoutOutput += Number(element.amount);
+          } catch (error) {
+            throw new Error('amoutOutput is invalid. Amout entre must be valid number.');
+          }
+        }
+      });
+
+      return {
+        monthNumber: month,
+        month: listMonths[month].substr(0, 3),
+        amoutEntry,
+        amoutOutput,
+      }
+    }).filter(item => {
+      const currentMonth = new Date().getMonth();
+      const currentYear = new Date().getFullYear();
+
+      return (yearSelected === currentYear && item.monthNumber <= currentMonth) || (yearSelected < currentYear);
+    });
+  }, [yearSelected]);
 
 
   const handleMothSelected = (mouth: string) => {
@@ -169,7 +219,7 @@ const Dashboard: React.FC = () => {
   }
 
   return(
-    <Container>''
+    <Container>
       <ContentHeader title="Dashboard" lineColor="#f7931b">
         <SelectInput options={months} onChange={(e) => handleMothSelected(e.target.value)} defaultValue={mouthSelected} />
         <SelectInput options={years} onChange={(e) => handleYearSelected(e.target.value)} defaultValue={yearSelected} />
@@ -181,8 +231,9 @@ const Dashboard: React.FC = () => {
       </article>
         <ContentStatisticsGraphs>
           <MessageBox title={message.title} description={message.description} footerText={message.footerText} icon={message.icon} />
-          <PieChart data={relationsExpensesVersusGains}></PieChart>
+          <PieChartBox data={relationsExpensesVersusGains}></PieChartBox>
         </ContentStatisticsGraphs>
+        <HistoryBox data={histotyData} lineColorAmoutEntry="#f29318" lineColorAmoutOutput="#ff0400" />
     </Container>
   );
 }

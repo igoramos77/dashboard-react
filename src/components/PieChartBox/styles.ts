@@ -48,8 +48,7 @@ export const Legend = styled.li<ILegendProps>`
 
   > div {
     background: ${props => props.background};
-    height: 40px;
-    width: 40px;
+    padding: .35rem .5rem;
     border-radius: 5px;
     text-align: center;
     font-size: 18px;
@@ -59,5 +58,7 @@ export const Legend = styled.li<ILegendProps>`
 `;
 
 export const SideRight = styled.main`
-
+  display: flex;
+  flex: 1;
+  justify-content: center;
 `;

@@ -1,6 +1,14 @@
-export default [
+const expenses = [
+  {"description":"Energia elétrica",      "amount":"3000.55","type":"saída","frequency":"recorrente","date":"2020-02-10"},
+  {"description":"Energia elétrica",      "amount":"800.55","type":"saída","frequency":"recorrente","date":"2020-01-10"},
+  {"description":"Energia elétrica",      "amount":"150.55","type":"saída","frequency":"recorrente","date":"2020-02-10"},
   {"description":"Energia elétrica",      "amount":"150.55","type":"saída","frequency":"recorrente","date":"2020-01-10"},
-  {"description":"Energia elétrica",      "amount":"150.55","type":"saída","frequency":"recorrente","date":"2021-01-10"},
+  {"description":"Energia elétrica",      "amount":"800.00","type":"saída","frequency":"recorrente","date":"2020-01-10"},
+  {"description":"Energia elétrica",      "amount":"1200.55","type":"saída","frequency":"recorrente","date":"2020-09-10"},
+  {"description":"Energia elétrica",      "amount":"150.55","type":"saída","frequency":"recorrente","date":"2020-08-10"},
+  {"description":"Energia elétrica",      "amount":"150.55","type":"saída","frequency":"recorrente","date":"2020-07-10"},
+  {"description":"Energia elétrica",      "amount":"5000.55","type":"saída","frequency":"recorrente","date":"2020-06-10"},
+  {"description":"Energia elétrica",      "amount":"3000.55","type":"saída","frequency":"recorrente","date":"2021-01-10"},
   {"description":"Água",                  "amount":"75.55", "type":"saída","frequency":"recorrente","date":"2021-01-15"},
   {"description": "Telefone",             "amount":"99.99", "type":"saída","frequency":"recorrente","date":"2021-01-23"},
   {"description":"Plano de Saúde",        "amount":"300.00","type":"saída","frequency":"recorrente","date":"2021-01-23"},
@@ -51,3 +59,5 @@ export default [
   {"description":"Pizza",                 "amount":"60.00", "type":"saída","frequency":"eventual",  "date":"2021-01-19"},
   {"description":"Pizza",                 "amount":"60.00", "type":"saída","frequency":"eventual",  "date":"2021-07-19"}
 ]
+
+export default expenses;

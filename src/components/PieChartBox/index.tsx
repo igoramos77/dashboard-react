@@ -2,11 +2,11 @@ import React from 'react';
 
 import CountUp from 'react-countup';
 
-//import { PieChart, Pie, Cell, ResponsiveContainer } from 'recharts';
+import { PieChart, Pie, Cell, ResponsiveContainer } from 'recharts';
 
 import { Container, SideLeft, LegendContainer, Legend, SideRight  } from './styles';
 
-interface IPieChartProps {
+interface IPieChartBoxProps {
   data: {
     name: string;
     value: number;
@@ -15,7 +15,7 @@ interface IPieChartProps {
   }[];
 }
 
-const PieChart: React.FC<IPieChartProps> = ({ data }) => (
+const PieChartBox: React.FC<IPieChartBoxProps> = ({ data }) => (
   <Container>
     <SideLeft>
       <h2>Relação</h2>
@@ -31,15 +31,17 @@ const PieChart: React.FC<IPieChartProps> = ({ data }) => (
       </LegendContainer>
     </SideLeft>
     <SideRight>
-     {/*  <ResponsiveContainer>
+     <ResponsiveContainer>
         <PieChart>
-          <Pie data={[{ amout: 30, percent: 95 }]} labelLine={false} dataKey="percent">
-            {}
+          <Pie data={data} dataKey="percent">
+            {
+              data.map((item, index) => <Cell key={index} fill={item.background} />)
+            }
           </Pie>
         </PieChart>
-      </ResponsiveContainer> */}
+      </ResponsiveContainer>
     </SideRight>
   </Container>
 );
 
-export default PieChart;
+export default PieChartBox;
