@@ -6,6 +6,7 @@ import ContentStatistics from '../../components/ContentStatistics';
 import MessageBox from '../../components/MessageBox';
 import PieChartBox from '../../components/PieChartBox';
 import HistoryBox from '../../components/HistoryBox';
+import BarChartBox from '../../components/BarChartBox';
 
 import gains from '../../repositories/gains';
 import expenses from '../../repositories/expenses';
@@ -197,6 +198,45 @@ const Dashboard: React.FC = () => {
     });
   }, [yearSelected]);
 
+  const relationsExpensevesRecurrentVersusEventual = useMemo(() => {
+    let amoutRecurrent: number = 0;
+    let amoutEventual: number = 0;
+
+    expenses.filter((expense) => {
+      const date = new Date(expense.date);
+      const year = date.getFullYear();
+      const month = date.getMonth() + 1;
+
+      return month === mouthSelected && year === yearSelected;
+    })
+    .forEach(expense => {
+      if (expense.frequency === 'recorrente') {
+        return amoutRecurrent += Number(expense.amount);
+      }
+      if (expense.frequency === 'eventual') {
+        return amoutEventual += Number(expense.amount);
+      }
+    });
+
+    const total = amoutRecurrent + amoutEventual;
+    const percent = Number((amoutEventual / total) * 100).toFixed(1);
+    return [
+      {
+        name: 'Recorrentes',
+        amount: amoutRecurrent,
+        percent: percent,
+        background: '#f7931b',
+      },
+      {
+        name: 'Eventual',
+        amount: amoutEventual,
+        percent: percent,
+        background: '#e44q4e',
+      },
+    ];
+
+  }, [mouthSelected, yearSelected])
+
 
   const handleMothSelected = (mouth: string) => {
     try {
@@ -234,6 +274,7 @@ const Dashboard: React.FC = () => {
           <PieChartBox data={relationsExpensesVersusGains}></PieChartBox>
         </ContentStatisticsGraphs>
         <HistoryBox data={histotyData} lineColorAmoutEntry="#f29318" lineColorAmoutOutput="#ff0400" />
+        <BarChartBox></BarChartBox>
     </Container>
   );
 }
