@@ -15,6 +15,7 @@ import listMonths from '../../utils/months';
 import happyImg from '../../assets/happy.svg';
 import sadImg from '../../assets/sad.svg';
 import grinningImg from '../../assets/grinning.svg';
+import opsImg from '../../assets/grinning.svg';
 
 import { Container, ContentStatisticsGraphs } from './styles';
 
@@ -105,6 +106,16 @@ const Dashboard: React.FC = () => {
         icon: sadImg,
       }
     }
+
+    else if (totalGains === 0 && totalExpenses === 0) {
+      return {
+        title: "Ops!",
+        description: "Neste mês, não há registros de entradas ou saídas.",
+        footerText: "Parece que você não fez nenhum registro no mês/ano selecionado.",
+        icon: opsImg,
+      }
+    }
+
     else if(totalBalance === 0) {
       return {
         title: "Ufa!",
@@ -123,24 +134,24 @@ const Dashboard: React.FC = () => {
       }
     }
 
-  },[totalBalance]);
+  },[totalBalance, totalGains, totalExpenses]);
 
   const relationsExpensesVersusGains = useMemo(() => {
     const total = totalGains + totalExpenses;
-    const percentGains = (totalGains / total) * 100;
-    const percentExpenses = (totalExpenses / total) * 100;
+    const percentGains = Number(((totalGains / total) * 100).toFixed);
+    const percentExpenses = Number(((totalExpenses / total) * 100).toFixed(1));
 
     const data = [
       {
         name: "Entradas",
         value: totalGains,
-        percent: Number(percentGains.toFixed(1)),
+        percent: percentGains ? percentGains : 0,
         background: "#e44c4e",
       },
       {
         name: "Saídas",
         value: totalExpenses,
-        percent: Number(percentExpenses.toFixed(1)),
+        percent: percentExpenses ? percentExpenses : 0,
         background: "#f7931b",
       }
     ];
@@ -219,23 +230,66 @@ const Dashboard: React.FC = () => {
     });
 
     const total = amoutRecurrent + amoutEventual;
-    const percent = Number((amoutEventual / total) * 100).toFixed(1);
+    const recurrentPercent = Number(((amoutRecurrent / total) * 100).toFixed(1));
+    const eventualPercent = Number(((amoutEventual / total) * 100).toFixed(1));
+
     return [
       {
         name: 'Recorrentes',
         amount: amoutRecurrent,
-        percent: percent,
+        percent: recurrentPercent ? recurrentPercent : 0,
         background: '#f7931b',
       },
       {
         name: 'Eventual',
         amount: amoutEventual,
-        percent: percent,
-        background: '#e44q4e',
+        percent: eventualPercent ? eventualPercent : 0,
+        background: '#e44c4e',
       },
     ];
 
-  }, [mouthSelected, yearSelected])
+  }, [mouthSelected, yearSelected]);
+
+  const relationsGainsRecurrentVersusEventual = useMemo(() => {
+    let amoutRecurrent: number = 0;
+    let amoutEventual: number = 0;
+
+    gains.filter((gain) => {
+      const date = new Date(gain.date);
+      const year = date.getFullYear();
+      const month = date.getMonth() + 1;
+
+      return month === mouthSelected && year === yearSelected;
+    })
+    .forEach(gain => {
+      if (gain.frequency === 'recorrente') {
+        return amoutRecurrent += Number(gain.amount);
+      }
+      if (gain.frequency === 'eventual') {
+        return amoutEventual += Number(gain.amount);
+      }
+    });
+
+    const total = amoutRecurrent + amoutEventual;
+    const recurrentPercent = Number(((amoutRecurrent / total) * 100).toFixed(1));
+    const eventualPercent = Number(((amoutEventual / total) * 100).toFixed(1));
+
+    return [
+      {
+        name: 'Recorrentes',
+        amount: amoutRecurrent,
+        percent: recurrentPercent ? recurrentPercent : 0,
+        background: '#f7931b',
+      },
+      {
+        name: 'Eventual',
+        amount: amoutEventual,
+        percent: eventualPercent ? eventualPercent : 0,
+        background: '#e44c4e',
+      },
+    ];
+
+  }, [mouthSelected, yearSelected]);
 
 
   const handleMothSelected = (mouth: string) => {
@@ -274,7 +328,8 @@ const Dashboard: React.FC = () => {
           <PieChartBox data={relationsExpensesVersusGains}></PieChartBox>
         </ContentStatisticsGraphs>
         <HistoryBox data={histotyData} lineColorAmoutEntry="#f29318" lineColorAmoutOutput="#ff0400" />
-        <BarChartBox></BarChartBox>
+        <BarChartBox data={relationsExpensevesRecurrentVersusEventual} title="Saídas"></BarChartBox>
+        <BarChartBox data={relationsGainsRecurrentVersusEventual} title="Entradas"></BarChartBox>
     </Container>
   );
 }
