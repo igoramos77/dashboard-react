@@ -12,3 +12,8 @@ export const ContentStatisticsGraphs = styled.div`
     display: flex;
     justify-content: space-between;
 `;
+
+export const ContentChartBarBox = styled.div`
+    display: flex;
+    justify-content: space-between;
+`;

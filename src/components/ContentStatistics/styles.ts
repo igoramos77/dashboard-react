@@ -24,6 +24,8 @@ export const Container = styled.div<IContainerProps>`
   > h3 {
     color: ${props => props.theme.colors.white};
     font-size: 2.5rem;
+    position: relative;
+    z-index: 9;
   }
 
   > p {

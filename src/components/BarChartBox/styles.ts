@@ -5,18 +5,18 @@ interface ILegendProps {
 }
 
 export const Container = styled.div`
-  width: calc(50% - 2rem);
+  width: 50%;
   display: flex;
-  box-sizing: border-box;
   min-height: 260px;
-  margin: 10px 0;
+  margin: 10px 10px 0 0;
   background: ${props => props.theme.colors.tertiary};
   color: ${props => props.theme.colors.white};
   border-radius: 7px;
-  flex-wrap: wrap;
-  float: left;
+  padding: 30px 20px;
+  flex-direction: column;
   justify-content: space-between;
-  margin: 0 1rem;
+  box-sizing: border-box;
+  flex-wrap: wrap;
 `;
 
 export const SideLeft = styled.aside`

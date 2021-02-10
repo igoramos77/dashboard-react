@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useCallback } from 'react';
 
 import ContentHeader from '../../components/ContentHeader';
 import SelectInput from '../../components/SelectInput';
@@ -17,7 +17,7 @@ import sadImg from '../../assets/sad.svg';
 import grinningImg from '../../assets/grinning.svg';
 import opsImg from '../../assets/grinning.svg';
 
-import { Container, ContentStatisticsGraphs } from './styles';
+import { Container, ContentChartBarBox, ContentStatisticsGraphs } from './styles';
 
 const Dashboard: React.FC = () => {
   const [mouthSelected, setMouthSelected] = useState<number>(new Date().getMonth() + 1);
@@ -292,7 +292,7 @@ const Dashboard: React.FC = () => {
   }, [mouthSelected, yearSelected]);
 
 
-  const handleMothSelected = (mouth: string) => {
+  const handleMothSelected = useCallback((mouth: string) => {
     try {
       const parseMouth = Number(mouth);
       setMouthSelected(parseMouth);
@@ -300,9 +300,9 @@ const Dashboard: React.FC = () => {
     catch (error) {
       throw new Error ('Invalid mouth value! Is accept 0 - 24.');
     }
-  }
+  }, []);
 
-  const handleYearSelected = (year: string) => {
+  const handleYearSelected = useCallback((year: string) => {
     try {
       const parseYear = Number(year);
       setYearSelected(parseYear);
@@ -310,7 +310,7 @@ const Dashboard: React.FC = () => {
     catch (error) {
       throw new Error ('Invalid year value! Is accept only numbers.');
     }
-  }
+  }, []);
 
   return(
     <Container>
@@ -328,8 +328,10 @@ const Dashboard: React.FC = () => {
           <PieChartBox data={relationsExpensesVersusGains}></PieChartBox>
         </ContentStatisticsGraphs>
         <HistoryBox data={histotyData} lineColorAmoutEntry="#f29318" lineColorAmoutOutput="#ff0400" />
-        <BarChartBox data={relationsExpensevesRecurrentVersusEventual} title="Saídas"></BarChartBox>
-        <BarChartBox data={relationsGainsRecurrentVersusEventual} title="Entradas"></BarChartBox>
+        <ContentChartBarBox>
+          <BarChartBox data={relationsExpensevesRecurrentVersusEventual} title="Saídas"></BarChartBox>
+          <BarChartBox data={relationsGainsRecurrentVersusEventual} title="Entradas"></BarChartBox>
+        </ContentChartBarBox>
     </Container>
   );
 }
